@@ -1,0 +1,5 @@
+create table channel(id integer primary key autoincrement, title text, link text, description text, last_build_date text);
+
+create table image(id integer primary key autoincrement, title text, link text, url text, cid integer, iid integer);
+
+create table item(int integer primary key autoincrement, title text, description text, link text, guid text, pub_date text, cid integer);
