@@ -16,12 +16,11 @@ void ChannelQuery::insertChannel() {
 
   int result_code = m_connection.prepare_statement(temp_query);
   if (result_code != SQLITE_OK) {
-    std::cerr << "Error while prepared statements. ErrorCode : " << result_code
-              << " Message: " << m_connection.get_error_message() << "\n";
+    SPDLOG_ERROR( "Error while prepared statements. ErrorCode : {} Message: {} \n" ,result_code, m_connection.get_error_message());
     return;
   }
   while (m_connection.next() == SQLITE_ROW) {
-    std::cout << "Value: " << m_connection.get_column_string_value(2) << "\n";
+    SPDLOG_INFO( "Value: {} \n " ,m_connection.get_column_string_value(2));
   }
   m_connection.finalise();
 }
@@ -32,9 +31,7 @@ int ChannelQuery::get_channel_id() {
   std::string query = "select id from channel where title = ?";
   int result_code = m_connection.prepare_statement(query);
   if (result_code != SQLITE_OK) {
-    std::cerr << "Error while prepared statements. ErrorCode : " << result_code
-              << " Message: " << m_connection.get_error_message() << "\n";
-
+    SPDLOG_ERROR( "Error while prepared statements. ErrorCode : {}, Message: {} \n" ,result_code ,m_connection.get_error_message());
     m_connection.finalise();
     return -1;
   }

@@ -6,6 +6,7 @@
 #include "models.hpp"
 #include <cstddef>
 #include <curl/curl.h>
+#include <fstream>
 #include <spdlog/spdlog.h>
 #include <sqlite3.h>
 #include <tinyxml2.h>
@@ -91,7 +92,7 @@ void downloadUrl(std::string url, MemoryStruct *output) {
   }
 }
 
-int main() {
+void initialize() {
 
   MemoryStruct output;
   output.memory = (char *)malloc(0);
@@ -102,7 +103,23 @@ int main() {
   downloadUrl(url, &output);
   fmt::print("Output: {}\n", output.memory);
   parseRssFeed(output.memory, output.size);
-  //atomFeeds
-  return 0;
+  // atomFeeds
   free(output.memory);
 }
+
+std::vector<std::string> readFile() {
+
+  std::string url_file = "../url.txt";
+  std::ifstream url_stream(url_file, std::ifstream::binary);
+  if (!url_stream) {
+    SPDLOG_ERROR("Error While Opening {} file", url_file);
+    return {};
+  }
+  std::vector<std::string> urls;
+  for (std::string line; getline(url_stream, line);) {
+    urls.push_back(line);
+  }
+  return urls;
+}
+
+int main() { return 0; }
