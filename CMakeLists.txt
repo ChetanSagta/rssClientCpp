@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22.1)
 # set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "-g -Wall -pedantic -Wextra")
+set(CMAKE_CXX_FLAGS "-g -Wall -pedantic -Wextra -Werror")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(RssClient)
@@ -18,7 +18,7 @@ pkg_check_modules(LIBSQLLITE REQUIRED sqlite3)
 pkg_check_modules(LIBFMT REQUIRED fmt)
 
 include_directories(${CURL_INCLUDE_DIR})
-add_executable(${PROJECT_NAME} main.cpp models.cpp DBConnection.hpp DBConnection.cpp ChannelQuery.cpp ChannelQuery.hpp
+add_executable(${PROJECT_NAME} main.cpp models.hpp DBConnection.hpp DBConnection.cpp ChannelQuery.cpp ChannelQuery.hpp
     ImageQuery.cpp ImageQuery.hpp ItemQuery.cpp ItemQuery.hpp)
 
 # Link with the IMPORTED target created by 'pkg_check_modules'

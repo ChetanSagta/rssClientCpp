@@ -1,12 +1,15 @@
 #pragma once
 
+#include <algorithm>
 #include <ctime>
+#include <fmt/format.h>
 #include <iomanip>
 #include <iostream>
+#include <regex>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <tinyxml2.h>
 #include <vector>
-#include <fmt/format.h>
 
 class Image {
   std::string title;
@@ -15,9 +18,14 @@ class Image {
   friend class ImageQuery;
 
 public:
-  void print() {
-    std::cout << "\nTitle: " << title << "\nLink: " << link << "\nUrl: " << url
-              << std::endl;
+  std::string print() {
+    return fmt::format( "\nTitle: {}\nLink: {}, \nUrl: {}\n ", title, link,url);
+  }
+
+  std::string replace(std::string str, std::string from, std::string to) {
+    std::regex from_re(from);
+    std::string temp_str = std::regex_replace(str, from_re, to);
+    return temp_str;
   }
 
   Image parse(tinyxml2::XMLElement *element) {
@@ -27,6 +35,9 @@ public:
          child = child->NextSiblingElement()) {
       if (strcmp(child->Value(), "title") == 0) {
         this->title = child->GetText();
+        if (!this->title.empty()) {
+          this->title = replace(this->title, "'", "''");
+        }
       } else if (strcmp(child->Value(), "link") == 0) {
         this->link = child->GetText();
       } else if (strcmp(child->Value(), "url") == 0) {
@@ -47,10 +58,16 @@ class Item {
   friend class ItemQuery;
 
 public:
-  void print() {
-    std::cout << "Title: " << title << "\nLink: " << link
-              << "\nDescription: " << description << "\nGuid: " << guid
-              << "\nPubDate: " << pubDate << std::endl;
+  std::string print() {
+    return fmt::format(
+        "Title: {} \nLink: {} \nDescription: {}\nGuid: {}\n Description: {}",
+        title, link, description, guid, pubDate);
+  }
+
+  std::string replace(std::string str, std::string from, std::string to) {
+    std::regex from_re(from);
+    std::string temp_str = std::regex_replace(str, from_re, to);
+    return temp_str;
   }
 
   Item parse(tinyxml2::XMLElement *element) {
@@ -64,10 +81,16 @@ public:
         continue;
       if (strcmp(child->Value(), "title") == 0) {
         this->title = child->GetText();
+        if (!this->title.empty()) {
+          this->title = replace(this->title, "'", "''");
+        }
       } else if (strcmp(child->Value(), "link") == 0) {
         this->link = child->GetText();
       } else if (strcmp(child->Value(), "description") == 0) {
         this->description = child->GetText();
+        if (!this->description.empty()) {
+          this->description = replace(this->description, "'", "''");
+        }
       } else if (strcmp(child->Value(), "guid") == 0) {
         this->guid = child->GetText();
       } else if (strcmp(child->Value(), "pubDate") == 0) {
@@ -89,15 +112,15 @@ class Channel {
   friend class ChannelQuery;
 
 public:
-  void print() {
-    std::cout << "Title: " << title << "\nLink: " << link
-              << "\nDescription: " << description
-              << "Last Build Date: " << last_build_date << "\nImage: ";
-    image.print();
-    std::cout << "\nItems: ";
-    for (size_t i = 0; i < items.size(); i++) {
-      items.at(i).print();
-    }
+
+  std::string replace(std::string str, std::string from, std::string to) {
+    std::regex from_re(from);
+    std::string temp_str = std::regex_replace(str, from_re, to);
+    return temp_str;
+  }
+
+  std::string print() {
+    return fmt::format( "Title: {},\nLink: {},\nDescription: {},\nLast Build Date: {}\n", title,link,description, last_build_date);
   }
 
   Channel parse(tinyxml2::XMLElement *element) {
@@ -107,8 +130,14 @@ public:
          child = child->NextSiblingElement()) {
       if (strcmp(child->Value(), "title") == 0) {
         this->title = child->GetText();
+        if (!this->title.empty()) {
+          this->title = replace(this->title, "'", "''");
+        }
       } else if (strcmp(child->Value(), "description") == 0) {
         this->description = child->GetText();
+        if (!this->description.empty()) {
+          this->description = replace(this->description, "'", "''");
+        }
       } else if (strcmp(child->Value(), "link") == 0) {
         this->link = child->GetText();
       } else if (strcmp(child->Value(), "image") == 0) {
@@ -122,5 +151,4 @@ public:
     }
     return *this;
   }
-
 };

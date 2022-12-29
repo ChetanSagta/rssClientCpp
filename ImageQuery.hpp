@@ -1,12 +1,16 @@
 #pragma once
 #include "DBConnection.hpp"
-#include "models.cpp"
-class ImageQuery{
+#include "models.hpp"
+class ImageQuery {
 
-  void insertQuery(int,int);
-
+public:
+  ImageQuery(Image);
+  ~ImageQuery();
+  void insert(int);
+  bool isPresent();
 
 private:
-    Image m_image;
-    DBConnection connection;
+  Image m_image;
+  const std::string filename = "/home/chetan/Code/rssClient/rss.db";
+  DBConnection m_connection;
 };

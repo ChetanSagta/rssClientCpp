@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 #include <sqlite3.h>
 #include <string>
 
@@ -17,11 +20,11 @@ public:
   void finalise();
   std::string get_column_string_value(int);
   int get_column_int_value(int);
-  void bind_values(int,const std::string);
+  void bind_values(int, const std::string);
 
 private:
   sqlite3 *connection;
   sqlite3_stmt *pstmt;
   int error_code;
-  const char* pzTail;
+  const char *pzTail;
 };
