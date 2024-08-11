@@ -152,3 +152,8 @@ public:
     return *this;
   }
 };
+
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
